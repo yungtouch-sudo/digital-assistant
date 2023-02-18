@@ -41,6 +41,42 @@ window.addEventListener("load", () => {
 
 	const DIGITAL_ASSISTANT_HEIGHT = 420;
 
+	const digitalAssistantTemplate = () => {
+		return `<a class="digital-assistant js-digital-assistant" href="javascript:void(0)">
+		<div class="digital-assistant__wrap">
+			<ul class="digital-assistant__ball">
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+				<li class="ring"></li>
+			</ul>
+		</div>
+	</a>`;
+	};
+
+	document
+		.querySelector("body")
+		.insertAdjacentHTML("beforeend", digitalAssistantTemplate());
+
 	const clueTemplate = (y) => {
 		return `<div class="clue js-clue" style="top:${
 			y - DIGITAL_ASSISTANT_HEIGHT
@@ -84,7 +120,7 @@ window.addEventListener("load", () => {
 		return `<li id=${helperId}>
 		<div>
 			<p class="js-voice-text">${text}</p>
-			<a class="render-voice-btn js-render-voice-btn" href="javascript:void(0)">
+			<a class="render-voice-btn js-render-voice-btn" href="${link}">
 				<img src="https://cdn.tmweb.ru/other/youthbit/icon-mic.svg" alt="Иконка микрофона">
 			</a>
 		</div>
@@ -98,7 +134,7 @@ window.addEventListener("load", () => {
 
 	const clueTollTemplate = (y, x, id) => {
 		console.log(y, x, id);
-		return `<a class="js-clue-toll clue-toll" href="javascript:void(0)" style="top: ${y}px; right:${x}px" id="${id}">
+		return `<a class="js-clue-toll clue-toll" href="javascript:void(0)" style="top: ${y}px; left:${x}px" id="${id}">
 		<img src="https://cdn.tmweb.ru/other/youthbit/icon-toll.svg" alt="Иконка помощи">
 	</a>`;
 	};
@@ -115,6 +151,18 @@ window.addEventListener("load", () => {
 
 	digitalAssistant.addEventListener("click", (e) => {
 		digitalAssistantClue.classList.add("isOpen");
+	});
+
+	window.addEventListener("click", (e) => {
+		const target = e.target;
+		if (
+			!target.closest(".js-clue") &&
+			!target.closest(".js-digital-assistant") &&
+			!target.closest(".js-clue-toll")
+		) {
+			digitalAssistantClue.classList.remove("isOpen");
+			synth.cancel();
+		}
 	});
 
 	window.addEventListener("resize", (e) => {
@@ -135,7 +183,11 @@ window.addEventListener("load", () => {
 			.querySelector("body")
 			.insertAdjacentHTML(
 				"beforeend",
-				clueTollTemplate(clueCoords.top, clueCoords.right, tollId),
+				clueTollTemplate(
+					clueCoords.top - clueCoords.height,
+					clueCoords.left + clueCoords.width,
+					tollId,
+				),
 			);
 		document.querySelector(`#${tollId}`).addEventListener("focus", () => {
 			const helperList = digitalAssistantClue.querySelector(".js-clue-helper");
@@ -164,6 +216,8 @@ window.addEventListener("load", () => {
 				`#${helperId} .js-render-voice-btn`,
 			);
 
+			synth.cancel();
+
 			soundBtn.addEventListener("click", (e) => {
 				e.preventDefault();
 				let text = clue.getAttribute("data-clue-text");
@@ -171,6 +225,8 @@ window.addEventListener("load", () => {
 			});
 
 			digitalAssistantClue.classList.add("isOpen");
+			document.querySelector(".js-toggler").classList.add("isHelper");
+			document.querySelector(".js-helper-tab").classList.add("active");
 		});
 	});
 
@@ -203,6 +259,7 @@ window.addEventListener("load", () => {
 			notificationTab.classList.add("active");
 			helperTab.classList.remove("active");
 		}
+		synth.cancel();
 	});
 
 	var synth = window.speechSynthesis;
