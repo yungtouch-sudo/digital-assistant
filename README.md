@@ -1,2 +1,1 @@
-# digital-assistant
-brainstorm
+Тестовое задание

@@ -1,0 +1,291 @@
+.clue {
+	position: fixed;
+	right: 50px;
+
+	background: #F8F8F8;
+	box-shadow: 0px 10px 20px rgba(140, 98, 217, 0.25);
+	border-bottom-left-radius: 20px;
+	min-height: 380px;
+	width: 320px;
+
+	height: 400px;
+	overflow: hidden;
+
+	opacity: 0;
+	transform: scale(0);
+	pointer-events: none;
+	transition: 0.3s ease;
+
+	&.isOpen {
+		opacity: 1;
+		transform: scale(1);
+		pointer-events: all;
+	}
+
+
+	& .simplebar-vertical {
+		right: 10px;
+	}
+
+
+	& .clue__head {
+		background: #8C62D9;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-radius: 20px 20px 0px 0px;
+		padding: 15px;
+
+		& .clue__notification {
+			font-style: normal;
+			font-weight: 400;
+			font-size: 14px;
+			line-height: 16px;
+			color: #FFFFFF;
+			position: relative;
+			padding-left: 30px;
+
+			&::after {
+				position: absolute;
+				content: '';
+				background: url('https://cdn.tmweb.ru/other/youthbit/icon-notification.svg');
+				background-repeat: no-repeat;
+				background-position: center;
+				background-size: contain;
+				width: 20px;
+				height: 20px;
+				left: 0;
+				top: 50%;
+				transform: translateY(-50%);
+			}
+		}
+
+		& a {
+			width: 30px;
+			height: 30px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			transition: $tr-default;
+
+			&:hover {
+				transform: rotate(-45deg);
+			}
+
+			& svg {
+				width: 20px;
+				height: 20px;
+			}
+		}
+
+
+	}
+
+	& .clue__panel {
+		padding: 15px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&.isHelper {
+			& .clue__panel-checked--notification {
+				color: #CDCDCD;
+			}
+
+			& .clue__panel-checked--helper {
+				color: #8C62D9;
+			}
+
+			& .clue__panel-toggler {
+				& span {
+					left: 100%;
+					transform: translate(-15px, -50%);
+				}
+			}
+		}
+
+		&-checked {
+			font-style: normal;
+			font-weight: 400;
+			font-size: 14px;
+			line-height: 16px;
+			color: #CDCDCD;
+			transition: $tr-default;
+
+			&.clue__panel-checked--notification {
+				color: #8C62D9;
+			}
+
+		}
+
+		&-toggler {
+			width: 30px;
+			height: 16px;
+			background: #FFFFFF;
+			border: 1px solid #8C62D9;
+			border-radius: 23px;
+			padding: 2px 3px;
+			position: relative;
+			margin: 0px 6px;
+
+			& span {
+				width: 12px;
+				height: 12px;
+				background: #8C62D9;
+				position: absolute;
+				top: 50%;
+				left: 0;
+				transform: translate(2px, -50%);
+				border-radius: 50%;
+				transition: $tr-default;
+			}
+		}
+	}
+
+	& .clue__scroll-container {
+		height: 100%;
+	}
+
+	& ul {
+		& li {
+			position: relative;
+			padding: 15px;
+			background: #fff;
+			border-radius: 10px;
+			margin-top: 12px;
+			transition: $tr-default;
+
+			&.active {
+				&::after {
+					opacity: 1;
+				}
+
+				background: transparent;
+			}
+
+			&::after {
+				position: absolute;
+				content: '';
+				background: url('https://cdn.tmweb.ru/other/youthbit/icon-check.svg');
+				background-repeat: no-repeat;
+				background-position: center;
+				background-size: contain;
+				width: 14px;
+				height: 14px;
+				left: -23px;
+				top: 50%;
+				transform: translateY(-50%);
+				opacity: 0;
+				transition: $tr-default;
+			}
+
+			&:first-child {
+				margin-top: 0;
+			}
+
+			& div {
+				display: flex;
+				align-items: center;
+
+				& p {
+					font-weight: 400;
+					font-size: 14px;
+					line-height: 18px;
+					color: #2E2F33;
+					width: 200px;
+					margin-right: 20px;
+				}
+
+				& .render-voice-btn {
+					width: 30px;
+					height: 30px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					margin-left: auto;
+					align-self: flex-start;
+					transform: translateY(-7px);
+
+					&:hover img {
+						transform: scale(1.1);
+					}
+
+					& img {
+						width: 18px;
+						height: 18px;
+						transition: $tr-default;
+					}
+				}
+			}
+
+
+
+			& .link {
+				font-weight: 500;
+				font-size: 12px;
+				line-height: 14px;
+				color: #8C62D9;
+				padding: 8px 15px;
+				margin-top: 10px;
+				background: #F3EFFB;
+				border-radius: 50px;
+
+				transition: $tr-default;
+
+				&:hover {
+					background: #8C62D9;
+					color: #fff;
+				}
+			}
+		}
+	}
+
+	& .clue__tabs {
+		position: relative;
+		height: calc(100% - 120px);
+
+		& .clue__scroll-container {
+			transition: 0.5s ease;
+
+			&--notification {
+				opacity: 0;
+				pointer-events: none;
+
+				&.active {
+					opacity: 1;
+					pointer-events: all;
+				}
+			}
+
+			&--helper {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				padding: 0px 35px;
+
+				opacity: 0;
+				pointer-events: none;
+
+				&.active {
+					opacity: 1;
+					pointer-events: all;
+				}
+			}
+		}
+	}
+
+	& .clue__notification {
+		padding: 0px 35px;
+	}
+}
+
+.clue-item {
+	max-width: max-content;
+}
+
+.clue-toll {
+	position: fixed;
+	right: 0;
+}
