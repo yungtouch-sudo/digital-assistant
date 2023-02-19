@@ -1,0 +1,124 @@
+.project-template-popup {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: rgba(18, 3, 45, 0.5);
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 3;
+
+	transition: $tr-default;
+	opacity: 0;
+	pointer-events: none;
+
+	&.isOpen {
+		opacity: 1;
+		pointer-events: all;
+	}
+
+	& .project-template-popup__wrapper {
+		background: #FFFFFF;
+		border-radius: 25px;
+		padding: 40px 50px;
+		width: 100%;
+		position: relative;
+		max-width: 890px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 100vh;
+		max-height: 500px;
+	}
+
+	& .close-btn {
+		position: absolute;
+		width: 30px;
+		height: 30px;
+		top: 20px;
+		right: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	& .project-template-popup__title {
+		font-weight: 500;
+		font-size: 24px;
+		line-height: 28px;
+		color: #2E2F33;
+	}
+
+	& .project-template-popup__subtitle {
+		font-weight: 400;
+		font-size: 14px;
+		line-height: 19px;
+		color: #2E2F33;
+		margin-top: 20px;
+	}
+
+	& .project-template-popup__tabs {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+		grid-gap: 15px;
+		margin-top: 25px;
+
+		& li {
+			& a {
+				font-weight: 400;
+				font-size: 12px;
+				line-height: 14px;
+				text-transform: uppercase;
+				color: #2E2F33;
+				padding: 12px 20px;
+				border: 1px solid #909090;
+				border-radius: 7px;
+				transition: $tr-default;
+				width: 100%;
+				text-align: center;
+			}
+
+			&.active {
+				& a {
+					color: #fff;
+					background: #8C62D9;
+					border-color: #8C62D9;
+				}
+			}
+		}
+	}
+
+	& .project-template-popup__templates {
+		margin-top: 25px;
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-gap: 20px;
+
+
+		& li {
+			width: 100%;
+
+			& a {
+				width: 100%;
+				font-weight: 500;
+				font-size: 20px;
+				line-height: 23px;
+				color: #2E2F33;
+				padding: 35px 30px;
+				background: #F8F8F8;
+				border-radius: 10px;
+				transition: $tr-default;
+
+				width: 100%;
+
+				&:hover {
+					background: #8C62D9;
+					color: #fff;
+				}
+			}
+		}
+	}
+}

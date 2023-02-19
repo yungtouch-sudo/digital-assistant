@@ -2,9 +2,13 @@
 	position: fixed;
 	right: 50px;
 
+	z-index: 3;
+
 	background: #F8F8F8;
 	box-shadow: 0px 10px 20px rgba(140, 98, 217, 0.25);
 	border-bottom-left-radius: 20px;
+	border-top-right-radius: 20px;
+	border-top-left-radius: 20px;
 	min-height: 380px;
 	width: 320px;
 
@@ -33,7 +37,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		border-radius: 20px 20px 0px 0px;
+		border-radius: 20px 20px 20px 0px;
 		padding: 15px;
 
 		& .clue__notification {
@@ -193,7 +197,7 @@
 					font-size: 14px;
 					line-height: 18px;
 					color: #2E2F33;
-					width: 200px;
+					width: calc(100% - 30px);
 					margin-right: 20px;
 				}
 
@@ -282,14 +286,23 @@
 }
 
 .clue-item {
-	max-width: max-content;
+	&a{
+		max-width: max-content;
+	}
+	position: relative;
 }
 
 .clue-toll {
-	position: fixed;
+	position: absolute;
 	width: 30px;
 	height: 30px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	transform: translateY(-10px);
+
+	top: 0;
+	right: 0;
+	transform: translate(27px, -90%);
+	z-index: 2;
 }

@@ -43,6 +43,7 @@ window.addEventListener("load", () => {
 
 	const digitalAssistantTemplate = () => {
 		return `<a class="digital-assistant js-digital-assistant" href="javascript:void(0)">
+		<span class="counter js-digital-counter" data-counter="0">0</span>
 		<div class="digital-assistant__wrap">
 			<ul class="digital-assistant__ball">
 				<li class="ring"></li>
@@ -82,8 +83,8 @@ window.addEventListener("load", () => {
 			y - DIGITAL_ASSISTANT_HEIGHT
 		}px;">
 		<div class="clue__head">
-			<p class="clue__notification">У вас <span>6</span> уведомлений!</p>
-			<a href="javascript:void(0)">
+			<p class="clue__notification">Уведомления : <span class="js-notification-counter">0</span></p>
+			<a class="js-clear-notification" href="javascript:void(0)">
 				<img src="https://cdn.tmweb.ru/other/youthbit/icon-notification-reset.svg" alt="Очистка уведомлений">
 			</a>
 		</div>
@@ -95,7 +96,9 @@ window.addEventListener("load", () => {
 		<div class="clue__tabs">
 			<div
 				class="clue__scroll-container clue__scroll-container--notification js-custom-scroll js-notification-tab active">
-				<ul class="clue__notification js-clue-notification"></ul>
+				<ul class="clue__notification js-clue-notification">
+				
+				</ul>
 			</div>
 			<div class="clue__scroll-container clue__scroll-container--helper js-custom-scroll js-helper-tab">
 				<ul class="clue__helper js-clue-helper"></ul>
@@ -104,39 +107,22 @@ window.addEventListener("load", () => {
 	</div>`;
 	};
 
-	const clueNotificationTemplate = () => {
-		return `<li>
+	const clueHelperTemplate = (text, link, name, helperId) => {
+		return `<li id=${helperId}>
 		<div>
-			<p class="js-voice-text">Ваша заявка на конкурс успешно прошла модерацию!</p>
+			<p class="js-voice-text">${text}</p>
 			<a class="render-voice-btn js-render-voice-btn" href="javascript:void(0)">
 				<img src="https://cdn.tmweb.ru/other/youthbit/icon-mic.svg" alt="Иконка микрофона">
 			</a>
 		</div>
-		<a class="link" href="javascript:void(0)">Перейти к заявке</a>
+		${link === undefined ? "" : `<a class="link" href="${link}">${name}</a>`} 
 	</li>`;
 	};
 
-	const clueHelperTemplate = (text, link, helperId) => {
-		return `<li id=${helperId}>
-		<div>
-			<p class="js-voice-text">${text}</p>
-			<a class="render-voice-btn js-render-voice-btn" href="${link}">
-				<img src="https://cdn.tmweb.ru/other/youthbit/icon-mic.svg" alt="Иконка микрофона">
-			</a>
-		</div>
-		${
-			link === undefined
-				? ""
-				: '<a class="link" href="javascript:void(0)">Перейти к заявке</a>'
-		} 
-	</li>`;
-	};
-
-	const clueTollTemplate = (y, x, id) => {
-		console.log(y, x, id);
-		return `<a class="js-clue-toll clue-toll" href="javascript:void(0)" style="top: ${y}px; left:${x}px" id="${id}">
+	const clueTollTemplate = (id) => {
+		return `<i class="js-clue-toll clue-toll" id="${id}">
 		<img src="https://cdn.tmweb.ru/other/youthbit/icon-toll.svg" alt="Иконка помощи">
-	</a>`;
+	</i>`;
 	};
 
 	const clues = document.querySelectorAll("[data-clue-text]");
@@ -158,7 +144,8 @@ window.addEventListener("load", () => {
 		if (
 			!target.closest(".js-clue") &&
 			!target.closest(".js-digital-assistant") &&
-			!target.closest(".js-clue-toll")
+			!target.closest(".js-clue-toll") &&
+			!target.closest("button")
 		) {
 			digitalAssistantClue.classList.remove("isOpen");
 			synth.cancel();
@@ -175,29 +162,34 @@ window.addEventListener("load", () => {
 
 	clues.forEach((clue) => {
 		clue.classList.add("clue-item");
-		let clueCoords = clue.getBoundingClientRect();
 
 		let tollId = nanoid();
 		let helperId = nanoid();
-		document
-			.querySelector("body")
-			.insertAdjacentHTML(
-				"beforeend",
-				clueTollTemplate(
-					clueCoords.top - clueCoords.height,
-					clueCoords.left + clueCoords.width,
-					tollId,
-				),
-			);
-		document.querySelector(`#${tollId}`).addEventListener("focus", () => {
+		let clueId = nanoid();
+
+		clue.setAttribute("id", clueId);
+
+		clue.insertAdjacentHTML("beforeend", clueTollTemplate(tollId));
+		let toolElement = document.querySelector(`#${tollId}`);
+		toolElement.addEventListener("click", (e) => {
+			e.stopPropagation();
+			console.log("fff");
 			const helperList = digitalAssistantClue.querySelector(".js-clue-helper");
 			helperList.innerHTML = "";
 			if (clue.getAttribute("data-clue-link")) {
+				if (clue.hasAttribute("data-clue-link-name")) {
+					if (clue.getAttribute("data-clue-link") === "") {
+						clue.setAttribute("data-clue-link-name", "Ссылка");
+					}
+				} else {
+					clue.setAttribute("data-clue-link-name", "Ссылка");
+				}
 				helperList.insertAdjacentHTML(
 					"beforeend",
 					clueHelperTemplate(
 						clue.getAttribute("data-clue-text"),
 						clue.getAttribute("data-clue-link"),
+						clue.getAttribute("data-clue-link-name"),
 						helperId,
 					),
 				);
@@ -206,6 +198,7 @@ window.addEventListener("load", () => {
 					"beforeend",
 					clueHelperTemplate(
 						clue.getAttribute("data-clue-text"),
+						undefined,
 						undefined,
 						helperId,
 					),
@@ -226,9 +219,99 @@ window.addEventListener("load", () => {
 
 			digitalAssistantClue.classList.add("isOpen");
 			document.querySelector(".js-toggler").classList.add("isHelper");
+			document.querySelector(".js-notification-tab").classList.remove("active");
 			document.querySelector(".js-helper-tab").classList.add("active");
+			new Audio("https://cdn.tmweb.ru/other/youthbit/notification.mp3").play();
 		});
 	});
+
+	const notificationList = document.querySelector(".js-clue-notification");
+
+	window.addNotificationGrand = (text) => {
+		let id = nanoid();
+		notificationList.insertAdjacentHTML(
+			"afterbegin",
+			`<li id="${id}">
+<div>
+	<p class="js-voice-text">Ваш проект "${text}" отправлен на модерацию! Пожалуйста ожидайте результата</p>
+	<a class="render-voice-btn js-render-voice-btn" href="javascript:void(0)">
+		<img src="https://cdn.tmweb.ru/other/youthbit/icon-mic.svg" alt="Иконка микрофона">
+	</a>
+</div>
+</li>`,
+		);
+
+		let speachElement = document.querySelector(`#${id} .js-render-voice-btn`);
+
+		speachElement.addEventListener("click", (e) => {
+			e.preventDefault();
+			let text = speachElement
+				.closest("li")
+				.querySelector(".js-voice-text").innerHTML;
+			convertText(text);
+		});
+
+		digitalAssistantClue.classList.add("isOpen");
+		document.querySelector(".js-toggler").classList.remove("isHelper");
+		document.querySelector(".js-helper-tab").classList.remove("active");
+		document.querySelector(".js-notification-tab").classList.add("active");
+		const digitalCounter = document.querySelector(".js-digital-counter");
+
+		const notificationCounter = document.querySelector(
+			".js-notification-counter",
+		);
+		notificationCounter.innerHTML = Number(notificationCounter.innerHTML) + 1;
+		digitalCounter.innerHTML = Number(digitalCounter.innerHTML) + 1;
+		digitalCounter.setAttribute(
+			"data-counter",
+			Number(digitalCounter.innerHTML) + 1,
+		);
+
+		new Audio("https://cdn.tmweb.ru/other/youthbit/notification.mp3").play();
+	};
+
+	window.addNotificationDefault = (text, url, linkName) => {
+		let id = nanoid();
+		notificationList.insertAdjacentHTML(
+			"afterbegin",
+			`<li id="${id}">
+<div>
+	<p class="js-voice-text">${text}</p>
+	<a class="render-voice-btn js-render-voice-btn" href="javascript:void(0)">
+		<img src="https://cdn.tmweb.ru/other/youthbit/icon-mic.svg" alt="Иконка микрофона">
+	</a>
+</div>
+		${url === undefined ? "" : `<a class="link" href="${url}">${linkName}</a>`}
+</li>`,
+		);
+
+		let speachElement = document.querySelector(`#${id} .js-render-voice-btn`);
+
+		speachElement.addEventListener("click", (e) => {
+			e.preventDefault();
+			let text = speachElement
+				.closest("li")
+				.querySelector(".js-voice-text").innerHTML;
+			convertText(text);
+		});
+
+		digitalAssistantClue.classList.add("isOpen");
+		document.querySelector(".js-toggler").classList.remove("isHelper");
+		document.querySelector(".js-helper-tab").classList.remove("active");
+		document.querySelector(".js-notification-tab").classList.add("active");
+		const digitalCounter = document.querySelector(".js-digital-counter");
+
+		const notificationCounter = document.querySelector(
+			".js-notification-counter",
+		);
+		notificationCounter.innerHTML = Number(notificationCounter.innerHTML) + 1;
+		digitalCounter.innerHTML = Number(digitalCounter.innerHTML) + 1;
+		digitalCounter.setAttribute(
+			"data-counter",
+			Number(digitalCounter.innerHTML) + 1,
+		);
+		new Audio("https://cdn.tmweb.ru/other/youthbit/notification.mp3").play();
+	};
 
 	const initLibs = () => {
 		document.querySelectorAll(".js-custom-scroll").forEach((el) => {
@@ -238,6 +321,19 @@ window.addEventListener("load", () => {
 			});
 		});
 	};
+
+	document
+		.querySelector(".js-clear-notification")
+		.addEventListener("click", (e) => {
+			e.preventDefault();
+			document.querySelector(".js-notification-counter").innerHTML = "0";
+			document.querySelector(".js-digital-counter").innerHTML = "0";
+			document
+				.querySelector(".js-digital-counter")
+				.setAttribute("data-counter", 0);
+			document.querySelector(".js-clue-notification").innerHTML = "";
+			synth.cancel();
+		});
 
 	function libsIsLoaded() {
 		initLibs();
