@@ -82,8 +82,8 @@ window.addEventListener("load", () => {
 	});
 
 	new Swiper(".swiper.ticker__swiper", {
-		slidesPerView: 5,
-		spaceBetween: 220,
+		slidesPerView: 4,
+		spaceBetween: 50,
 		speed: 1000,
 		loopedSlides: 5,
 		loop: true,
@@ -205,14 +205,14 @@ window.addEventListener("load", () => {
 					mockNotification["notification3"].url,
 					mockNotification["notification3"].linkName,
 				);
-			}, 6000);
+			}, 7000);
 			setTimeout(() => {
 				window.addNotificationDefault(
 					mockNotification["notification4"].text,
 					mockNotification["notification4"].url,
 					mockNotification["notification4"].linkName,
 				);
-			}, 7000);
+			}, 9000);
 
 			setTimeout(() => {
 				window.addNotificationDefault(
@@ -220,7 +220,7 @@ window.addEventListener("load", () => {
 					mockNotification["notification5"].url,
 					mockNotification["notification5"].linkName,
 				);
-			}, 7000);
+			}, 11000);
 		});
 	}
 });

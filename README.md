@@ -26,7 +26,7 @@ npm start
 
 Разработчики
 
-Деменьтьева Екатерина @Catletko
+Деменьтьева Екатерина @Brickstudiopro
 Миронов Максим frontend @yoh0a
 Тригубов Артем frontend @lkmatter
 Ищенко Никита frontend @Nikita_Unit
