@@ -1,7 +1,5 @@
 .dooble-flex {
 	display: flex;
-
-
 }
 
 .dooble-flex__sticky {
@@ -71,7 +69,7 @@
 		display: none;
 		margin-top: 40px;
 
-		&.active{
+		&.active {
 			display: block;
 		}
 
@@ -270,9 +268,10 @@
 .dooble-flex__content {
 	display: none;
 
-	&.active{
+	&.active {
 		display: block;
 	}
+
 	&--myprojects {
 		& .head {
 			position: relative;

@@ -33,13 +33,14 @@ window.addEventListener("load", () => {
 	}
 
 	const libsUrls = [
-		"https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.css",
-		"https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.js",
+		"https://cdn.tmweb.ru/other/youthbit/simplebar.css",
+		"https://cdn.tmweb.ru/other/youthbit/simplebar.js",
+		"https://cdn.tmweb.ru/other/youthbit/digital-assistant.css",
 	];
 
 	Promise.all(libsUrls.map(loadScript)).then(libsIsLoaded);
 
-	const DIGITAL_ASSISTANT_HEIGHT = 420;
+	const DIGITAL_ASSISTANT_HEIGHT = 435;
 
 	const digitalAssistantTemplate = () => {
 		return `<a class="digital-assistant js-digital-assistant" href="javascript:void(0)">
@@ -80,7 +81,7 @@ window.addEventListener("load", () => {
 
 	const clueTemplate = (y) => {
 		return `<div class="clue js-clue" style="top:${
-			y - DIGITAL_ASSISTANT_HEIGHT
+			y - DIGITAL_ASSISTANT_HEIGHT - 100
 		}px;">
 		<div class="clue__head">
 			<p class="clue__notification">Уведомления : <span class="js-notification-counter">0</span></p>
@@ -145,7 +146,8 @@ window.addEventListener("load", () => {
 			!target.closest(".js-clue") &&
 			!target.closest(".js-digital-assistant") &&
 			!target.closest(".js-clue-toll") &&
-			!target.closest("button")
+			!target.closest("button") &&
+			!target.closest("label")
 		) {
 			digitalAssistantClue.classList.remove("isOpen");
 			synth.cancel();
@@ -153,7 +155,6 @@ window.addEventListener("load", () => {
 	});
 
 	window.addEventListener("resize", (e) => {
-		console.log(digitalAssistantClue);
 		digitalAssistantClue.style.top = `${
 			document.querySelector(".js-digital-assistant").getBoundingClientRect()
 				.top - DIGITAL_ASSISTANT_HEIGHT
@@ -173,7 +174,6 @@ window.addEventListener("load", () => {
 		let toolElement = document.querySelector(`#${tollId}`);
 		toolElement.addEventListener("click", (e) => {
 			e.stopPropagation();
-			console.log("fff");
 			const helperList = digitalAssistantClue.querySelector(".js-clue-helper");
 			helperList.innerHTML = "";
 			if (clue.getAttribute("data-clue-link")) {
@@ -233,7 +233,7 @@ window.addEventListener("load", () => {
 			"afterbegin",
 			`<li id="${id}">
 <div>
-	<p class="js-voice-text">Ваш проект "${text}" отправлен на модерацию! Пожалуйста ожидайте результата</p>
+	<p class="js-voice-text">${text}</p>
 	<a class="render-voice-btn js-render-voice-btn" href="javascript:void(0)">
 		<img src="https://cdn.tmweb.ru/other/youthbit/icon-mic.svg" alt="Иконка микрофона">
 	</a>
@@ -315,7 +315,6 @@ window.addEventListener("load", () => {
 
 	const initLibs = () => {
 		document.querySelectorAll(".js-custom-scroll").forEach((el) => {
-			console.log(el);
 			new SimpleBar(el, {
 				autoHide: false,
 			});

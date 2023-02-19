@@ -1,6 +1,30 @@
 window.addEventListener("load", () => {
-	let nanoid = function () {
-		return Date.now().toString(36) + Math.random().toString(36).substr(2);
+	const mockNotification = {
+		notification1: {
+			text: "Добро пожаловать на наш сайт! <br> <br> Я - цифровой помощник, который будет помогать тебе в заполнении заявки на грант/конкурс, а также буду уведомлять тебя о разных событиях на сайте. ",
+			url: undefined,
+			linkName: undefined,
+		},
+		notification2: {
+			text: "Для участия необходимо: <br> <br> 1. Пройти верификацию учетной записи в системе «Молодёжь России» с помощью портала Госуслуг. (С этим вы успешно справились)",
+			url: undefined,
+			linkName: undefined,
+		},
+		notification3: {
+			text: "2. Заполнить все обязательные поля проектной формы в разделе «Мои проекты»",
+			url: "javascript:void(0)",
+			linkName: "Перейти в мои проекты",
+		},
+		notification4: {
+			text: "3. Подать заявку на грантовый конкурс в разделе «Мои мероприятия»",
+			url: "javascript:void(0)",
+			linkName: "Перейти в мои мероприятия",
+		},
+		notification5: {
+			text: "Всероссийский конкурс молодёжных проектов проводится в соответствии с Постановлением Правительства Российской Федерации от 15 сентября 2020 года № 1436 «Об утверждении Правил предоставления грантов в форме субсидий из федерального бюджета победителям Всероссийского конкурса молодёжных проектов» (далее – Правила) не менее 1 раза в год. Цель конкурса – вовлечение молодёжи в творческую деятельность и социальную практику, повышение гражданской активности, формирование здорового образа жизни, создание эффективной системы социальных лифтов для самореализации молодежи и раскрытие потенциала молодежи в интересах развития страны.",
+			url: undefined,
+			linkName: undefined,
+		},
 	};
 
 	const grandForm = document.querySelector(".grand-form");
@@ -23,21 +47,31 @@ window.addEventListener("load", () => {
 
 		for (let i = 0; i < grandFormInputs.length; i++) {
 			if (grandFormInputs[i].getAttribute("data-valid") === "false") {
-				window.addNotificationDefault(
-					"Форму не получится отправить, пока она не будет заполнена полностью))",
-					undefined,
-					undefined,
-				);
+				if (document.querySelector(".digital-assistant")) {
+					window.addNotificationDefault(
+						"Форму не получится отправить, пока она не будет заполнена полностью))",
+						undefined,
+						undefined,
+					);
+				}
 				return false;
 			}
 		}
 		for (let i = 0; i < grandFormInputs.length; i++) {
 			formData[grandFormInputs[i].name] = grandFormInputs[i].value;
 		}
+		let dataArray = Object.values(formData);
+		let result = dataArray
+			.map((el) => {
+				return `<span>${el}</span>`;
+			})
+			.join("<br>");
 
-		console.log(formData["project-name"]);
-		window.addNotificationGrand(formData["project-name"]);
-		// localStorage.setItem(`${nanoid()}|grand`, JSON.stringify(formData));
+		if (document.querySelector(".digital-assistant")) {
+			window.addNotificationGrand(
+				`Спасибо за заявку, но меня еще не внедрили на настоящий сайт росмолодёжи, но данные мы от вас получили. Сохраните их и не потеряйте! <br> <br> ${result}`,
+			);
+		}
 	});
 
 	new StickySidebar("#sidebar", {
@@ -138,79 +172,55 @@ window.addEventListener("load", () => {
 		rigthMainMenu.classList.add("active");
 	});
 
-	const mockNotification = {
-		notification1: {
-			text: "Добро пожаловать на наш сайт! <br> <br> Я - цифровой помощник, который будет помогать тебе в заполнении заявки на грант/конкурс, а также буду уведомлять тебя о разных событиях на сайте. ",
-			url: undefined,
-			linkName: undefined,
-		},
-		notification2: {
-			text: "Для участия необходимо: <br> <br> 1. Пройти верификацию учетной записи в системе «Молодёжь России» с помощью портала Госуслуг. (С этим вы успешно справились)",
-			url: undefined,
-			linkName: undefined,
-		},
-		notification3: {
-			text: "2. Заполнить все обязательные поля проектной формы в разделе «Мои проекты»",
-			url: "javascript:void(0)",
-			linkName: "Перейти в мои проекты",
-		},
-		notification4: {
-			text: "3. Подать заявку на грантовый конкурс в разделе «Мои мероприятия»",
-			url: "javascript:void(0)",
-			linkName: "Перейти в мои мероприятия",
-		},
-		notification5: {
-			text: "Всероссийский конкурс молодёжных проектов проводится в соответствии с Постановлением Правительства Российской Федерации от 15 сентября 2020 года № 1436 «Об утверждении Правил предоставления грантов в форме субсидий из федерального бюджета победителям Всероссийского конкурса молодёжных проектов» (далее – Правила) не менее 1 раза в год. Цель конкурса – вовлечение молодёжи в творческую деятельность и социальную практику, повышение гражданской активности, формирование здорового образа жизни, создание эффективной системы социальных лифтов для самореализации молодежи и раскрытие потенциала молодежи в интересах развития страны.",
-			url: undefined,
-			linkName: undefined,
-		},
-	};
+	// Тесты
 
-	let click = 0;
+	if (document.querySelector(".digital-assistant")) {
+		let click = 0;
 
-	window.addEventListener("click", function () {
-		click++;
-		if (click == 1) {
-			this.removeEventListener("click", arguments.callee, false);
-		}
+		window.addEventListener("click", function () {
+			click++;
+			if (click == 1) {
+				this.removeEventListener("click", arguments.callee, false);
+			}
 
-		setTimeout(() => {
-			window.addNotificationDefault(
-				mockNotification["notification1"].text,
-				mockNotification["notification1"].url,
-				mockNotification["notification1"].linkName,
-			);
-		}, 3000);
+			setTimeout(() => {
+				window.addNotificationDefault(
+					mockNotification["notification1"].text,
+					mockNotification["notification1"].url,
+					mockNotification["notification1"].linkName,
+				);
+			}, 3000);
 
-		setTimeout(() => {
-			window.addNotificationDefault(
-				mockNotification["notification2"].text,
-				mockNotification["notification2"].url,
-				mockNotification["notification2"].linkName,
-			);
-		}, 5000);
+			setTimeout(() => {
+				window.addNotificationDefault(
+					mockNotification["notification2"].text,
+					mockNotification["notification2"].url,
+					mockNotification["notification2"].linkName,
+				);
+			}, 5000);
 
-		setTimeout(() => {
-			window.addNotificationDefault(
-				mockNotification["notification3"].text,
-				mockNotification["notification3"].url,
-				mockNotification["notification3"].linkName,
-			);
-		}, 6000);
-		setTimeout(() => {
-			window.addNotificationDefault(
-				mockNotification["notification4"].text,
-				mockNotification["notification4"].url,
-				mockNotification["notification4"].linkName,
-			);
-		}, 7000);
+			setTimeout(() => {
+				window.addNotificationDefault(
+					mockNotification["notification3"].text,
+					mockNotification["notification3"].url,
+					mockNotification["notification3"].linkName,
+				);
+			}, 6000);
+			setTimeout(() => {
+				window.addNotificationDefault(
+					mockNotification["notification4"].text,
+					mockNotification["notification4"].url,
+					mockNotification["notification4"].linkName,
+				);
+			}, 7000);
 
-		setTimeout(() => {
-			window.addNotificationDefault(
-				mockNotification["notification5"].text,
-				mockNotification["notification5"].url,
-				mockNotification["notification5"].linkName,
-			);
-		}, 7000);
-	});
+			setTimeout(() => {
+				window.addNotificationDefault(
+					mockNotification["notification5"].text,
+					mockNotification["notification5"].url,
+					mockNotification["notification5"].linkName,
+				);
+			}, 7000);
+		});
+	}
 });
